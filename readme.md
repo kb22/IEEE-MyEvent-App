@@ -1,10 +1,10 @@
 This is a release for the IEEE madC contest. 
 
 Few Points to note:
-1. As this is a release for the contest only, the app works by creating a hotspot from the device
+\n1. As this is a release for the contest only, the app works by creating a hotspot from the device
 and connecting the computer to that internet connection, thus making the laptop as server.
-2. The computer should have wamp installed with all the php files in the www folder as listed in the file repository.
-3. Change the IP address with the IP address of the hotspot and you are good to go.
+\n2. The computer should have wamp installed with all the php files in the www folder as listed in the file repository.
+\n3. Change the IP address with the IP address of the hotspot and you are good to go.
 
 The app is fully functional with features as:
 1. Log In wih an already existing account.
