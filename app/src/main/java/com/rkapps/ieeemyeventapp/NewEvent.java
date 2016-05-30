@@ -1,5 +1,6 @@
 package com.rkapps.ieeemyeventapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -37,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.ReferenceQueue;
@@ -242,7 +244,6 @@ public class NewEvent extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-
     public void onBackPressed()
     {
         super.onBackPressed();
