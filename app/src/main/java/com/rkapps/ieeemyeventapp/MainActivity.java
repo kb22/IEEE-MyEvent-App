@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             Intent i = new Intent(MainActivity.this, FullscreenActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
+            moveTaskToBack(true);
             startActivity(i);
             finish();
 
