@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.rkapps.ieeemyeventapp.MainActivity">
     <group>
+    <item
+        android:id="@+id/action_refresh"
+        app:showAsAction="ifRoom"
+        android:title="REFRESH"/>
+    </group>
+    <group>
         <item
             android:id="@+id/action_about"
             android:orderInCategory="0"

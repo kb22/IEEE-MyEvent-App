@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.StrictMode;
@@ -22,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -57,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText dob;
     private SimpleDateFormat dateFormatter;
+    public SharedPreferences sharedpreferences;
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 0;
     private static final int UI_ANIMATION_DELAY = 300;
@@ -142,7 +145,44 @@ public class SignUpActivity extends AppCompatActivity {
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insert(v);
+
+                EditText editText = (EditText) findViewById(R.id.ed1);
+                String v1 = editText.getText().toString();
+                EditText editText2 = (EditText) findViewById(R.id.dob);
+                String v2 = editText2.getText().toString();
+                EditText editText3 = (EditText) findViewById(R.id.ed3);
+                String v3 = editText3.getText().toString();
+                EditText editText4 = (EditText) findViewById(R.id.ed4);
+                String v4 = editText4.getText().toString();
+                EditText editText5 = (EditText) findViewById(R.id.ed5);
+                String v5 = editText5.getText().toString();
+                EditText editText6 = (EditText) findViewById(R.id.ed6);
+                String v6 = editText6.getText().toString();
+                Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                String v7 = spinner.getSelectedItem().toString();
+                Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
+                String v8 = spinner2.getSelectedItem().toString();
+
+                if(v4.equals(v5)){
+                }else{
+                    Toast.makeText(SignUpActivity.this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(SignUpActivity.this,FullscreenActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+
+                sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                editor.putString("Email", v3);
+                editor.putString("Name", v1);
+                editor.putString("Section", v7);
+                editor.putString("SubSection", v8);
+                editor.putString("Membership", v6);
+                editor.commit();
+
+                Log.e("log_tag","Section in signup: " + v7 + " Sub: " + v8);
+                new createEvent().execute(v1,v2,v3,v4,v6,v7,v8);
             }
         });
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -175,95 +215,76 @@ public class SignUpActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    public void insert(View v) {
-        String result = null;
-        InputStream is = null;
-        EditText editText = (EditText) findViewById(R.id.ed1);
-        String v1 = editText.getText().toString();
-        EditText editText2 = (EditText) findViewById(R.id.dob);
-        String v2 = editText2.getText().toString();
-        EditText editText3 = (EditText) findViewById(R.id.ed3);
-        String v3 = editText3.getText().toString();
-        EditText editText4 = (EditText) findViewById(R.id.ed4);
-        String v4 = editText4.getText().toString();
-        EditText editText5 = (EditText) findViewById(R.id.ed5);
-        String v5 = editText5.getText().toString();
-        EditText editText6 = (EditText) findViewById(R.id.ed6);
-        String v6 = editText6.getText().toString();
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        String v7 = spinner.getSelectedItem().toString();
-        Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
-        String v8 = spinner2.getSelectedItem().toString();
+    class createEvent extends AsyncTask<String, String, String> {
+        boolean flag = false;
+        @Override
+        protected String doInBackground(String... args) {
 
-        if(v4.equals(v5)){
-        }else{
-            Toast.makeText(SignUpActivity.this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            String result = null;
+            InputStream is = null;
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
-        nameValuePairs.add(new BasicNameValuePair("f1", v1));
-        nameValuePairs.add(new BasicNameValuePair("f2", v2));
-        nameValuePairs.add(new BasicNameValuePair("f3", v3));
-        nameValuePairs.add(new BasicNameValuePair("f4", v4));
-        nameValuePairs.add(new BasicNameValuePair("f5", v6));
-        nameValuePairs.add(new BasicNameValuePair("f6", v7));
-        nameValuePairs.add(new BasicNameValuePair("f7", v8));
+            sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+            //SharedPreferences.Editor editor = sharedpreferences.edit();
 
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX);
+            nameValuePairs.add(new BasicNameValuePair("f1", args[0]));
+            nameValuePairs.add(new BasicNameValuePair("f2", args[1]));
+            nameValuePairs.add(new BasicNameValuePair("f3", args[2]));
+            nameValuePairs.add(new BasicNameValuePair("f4", args[3]));
+            nameValuePairs.add(new BasicNameValuePair("f5", args[4]));
+            nameValuePairs.add(new BasicNameValuePair("f6", args[5]));
+            nameValuePairs.add(new BasicNameValuePair("f7", args[6]));
 
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX);
+            //http post
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                Log.e("log_tag", "tet1");
+                HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/signup.php");
+                Log.e("log_tag", "tet2 ");
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                is = entity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null)
+                {
+                    sb.append(line + "\n");
+                    Intent i = new Intent(getBaseContext(),MainActivity.class);
+                    startActivity(i);
+                }
+                is.close();
 
-        //http post
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            Log.e("log_tag", "tet1");
-            HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/signup.php");
-            Log.e("log_tag", "tet2 ");
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            is = entity.getContent();
+                result=sb.toString();
+                JSONObject json_data = new JSONObject(result);
 
-            Log.e("log_tag", "connection success ");
-            Toast.makeText(getApplicationContext(), "Registered", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Log.e("log_tag", "Error in http connection " + e.toString());
-            Toast.makeText(getApplicationContext(), "Connection fail", Toast.LENGTH_SHORT).show();
-
+                CharSequence w = (CharSequence) json_data.get("re");
+                Log.e("log_tag", "connection success ");
+                flag = true;
+            } catch (Exception e) {
+                Log.e("log_tag", "Error in http connection " + e.toString());
+                flag = false;
+            }
+            return result;
         }
 
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null)
-            {
-                sb.append(line + "\n");
-                Intent i = new Intent(getBaseContext(),MainActivity.class);
+        @Override
+        protected void onPostExecute(String result){
+            Log.e("log_tag", "Result Signup: " + result);
+            if(flag == true) {
+                Toast.makeText(getApplicationContext(), "Registered", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(SignUpActivity.this,MainActivity.class);
                 startActivity(i);
             }
-            is.close();
-
-            result=sb.toString();
-        }
-        catch(Exception e)
-        {
-            Log.e("log_tag", "Error converting result "+e.toString());
-        }
-
-        try {
-
-            JSONObject json_data = new JSONObject(result);
-
-            CharSequence w = (CharSequence) json_data.get("re");
-
-            Toast.makeText(getApplicationContext(), w, Toast.LENGTH_SHORT).show();
-
-            Intent i = new Intent(SignUpActivity.this,MainActivity.class);
-            startActivity(i);
-        } catch (JSONException e) {
-            Log.e("log_tag", "Error parsing data " + e.toString());
-            Toast.makeText(getApplicationContext(), "JsonArray fail", Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(getApplicationContext(), "Could Not sign up", Toast.LENGTH_SHORT).show();
+                sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.clear();
+                editor.commit();
+            }
         }
     }
 
