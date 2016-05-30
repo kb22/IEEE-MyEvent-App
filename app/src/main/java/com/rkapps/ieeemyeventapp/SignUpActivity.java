@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -216,7 +217,7 @@ public class SignUpActivity extends AppCompatActivity {
         try {
             HttpClient httpclient = new DefaultHttpClient();
             Log.e("log_tag", "tet1");
-            HttpPost httppost = new HttpPost("http://192.168.43.79:8086/signup.php");
+            HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/signup.php");
             Log.e("log_tag", "tet2 ");
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);

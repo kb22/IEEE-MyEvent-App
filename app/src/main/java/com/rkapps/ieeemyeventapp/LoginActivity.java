@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected String doInBackground(String... params) {
                 DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
-                HttpPost httppost = new HttpPost("http://192.168.43.79:8086/login.php");
+                HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/login.php");
 
                 InputStream inputStream = null;
                 String result = null;
