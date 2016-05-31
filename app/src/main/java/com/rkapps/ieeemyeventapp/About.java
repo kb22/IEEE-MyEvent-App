@@ -22,11 +22,10 @@ public class About extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
+        Intent i = new Intent(About.this, MainActivity.class);
+        startActivity(i);
         finish();
         return true;
-
     }
 
     public void onBackPressed()

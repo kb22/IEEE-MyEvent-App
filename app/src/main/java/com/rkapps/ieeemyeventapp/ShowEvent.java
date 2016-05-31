@@ -69,7 +69,7 @@ public class ShowEvent extends AppCompatActivity {
                 deleteData();
             }
         });
-        
+
     }
 
     public void getData(){
@@ -214,8 +214,9 @@ public class ShowEvent extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
+        Intent i = new Intent(ShowEvent.this, MainActivity.class);
+        startActivity(i);
+        finish();
         return true;
 
     }

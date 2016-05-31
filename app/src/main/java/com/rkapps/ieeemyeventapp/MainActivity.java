@@ -43,6 +43,17 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_RESULTS="result";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            Log.e("log_tag", sharedpreferences.getString("Membershipinmain", "null"));
+            if (sharedpreferences.getString("Membership", "null").equals("null")) {
+                finish();
+            } else {
+            }
+        }catch(Exception e){
+            Log.e("log_tag", "Error " + e, null);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

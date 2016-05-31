@@ -164,25 +164,26 @@ public class SignUpActivity extends AppCompatActivity {
                 String v8 = spinner2.getSelectedItem().toString();
 
                 if(v4.equals(v5)){
+                    if(v1.equals("") || v2.equals("") || v3.equals("") || v4.equals("") || v5.equals("") || v6.equals("") || v7.equals("") || v8.equals("")){
+                        Toast.makeText(SignUpActivity.this, "Fill In Proper Details", Toast.LENGTH_SHORT).show();
+                    }else {
+                        sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                        editor.putString("Email", v3);
+                        editor.putString("Name", v1);
+                        editor.putString("Section", v7);
+                        editor.putString("SubSection", v8);
+                        editor.putString("Membership", v6);
+                        editor.commit();
+                        new createEvent().execute(v1, v2, v3, v4, v6, v7, v8);
+                    }
                 }else{
                     Toast.makeText(SignUpActivity.this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(SignUpActivity.this,FullscreenActivity.class);
-                    startActivity(i);
-                    finish();
                 }
 
-                sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-
-                editor.putString("Email", v3);
-                editor.putString("Name", v1);
-                editor.putString("Section", v7);
-                editor.putString("SubSection", v8);
-                editor.putString("Membership", v6);
-                editor.commit();
-
                 Log.e("log_tag","Section in signup: " + v7 + " Sub: " + v8);
-                new createEvent().execute(v1,v2,v3,v4,v6,v7,v8);
+
             }
         });
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

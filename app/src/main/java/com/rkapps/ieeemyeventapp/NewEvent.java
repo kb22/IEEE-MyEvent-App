@@ -147,6 +147,7 @@ public class NewEvent extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(myIntent, 0);
+        finish();
         return true;
 
     }
@@ -173,76 +174,76 @@ public class NewEvent extends AppCompatActivity {
             v7 = rb.getText().toString();
         }else if(rb2.isChecked()){
             v7 = rb2.getText().toString();}
+        if(v1.equals("") || v2.equals("") || v3.equals("") || v4.equals("") || v5.equals("") || v6.equals("")){
+            Toast.makeText(NewEvent.this, "Fill In Proper Details", Toast.LENGTH_SHORT).show();
+        }else {
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
 
-        sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-
-        nameValuePairs.add(new BasicNameValuePair("f1", v1));
-        nameValuePairs.add(new BasicNameValuePair("f2", v2));
-        nameValuePairs.add(new BasicNameValuePair("f3", v3));
-        nameValuePairs.add(new BasicNameValuePair("f4", v4));
-        nameValuePairs.add(new BasicNameValuePair("f5", v5));
-        nameValuePairs.add(new BasicNameValuePair("f6", v6));
-        nameValuePairs.add(new BasicNameValuePair("f7", v7));
-        nameValuePairs.add(new BasicNameValuePair("f8", sharedpreferences.getString("Membership", null)));
+            nameValuePairs.add(new BasicNameValuePair("f1", v1));
+            nameValuePairs.add(new BasicNameValuePair("f2", v2));
+            nameValuePairs.add(new BasicNameValuePair("f3", v3));
+            nameValuePairs.add(new BasicNameValuePair("f4", v4));
+            nameValuePairs.add(new BasicNameValuePair("f5", v5));
+            nameValuePairs.add(new BasicNameValuePair("f6", v6));
+            nameValuePairs.add(new BasicNameValuePair("f7", v7));
+            nameValuePairs.add(new BasicNameValuePair("f8", sharedpreferences.getString("Membership", null)));
 
 
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX);
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.LAX);
 
 
-        //http post
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            Log.e("log_tag", "tet1");
-            HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/newevent.php");
-            Log.e("log_tag", "tet2 ");
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            is = entity.getContent();
+            //http post
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                Log.e("log_tag", "tet1");
+                HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/newevent.php");
+                Log.e("log_tag", "tet2 ");
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                is = entity.getContent();
 
-            //Log.e("log_tag", "connection success ");
-            Toast.makeText(getApplicationContext(), "Event Successfully Created", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            //Log.e("log_tag", "Error in http connection " + e.toString());
-            Toast.makeText(getApplicationContext(), "Connection fail", Toast.LENGTH_SHORT).show();
+                //Log.e("log_tag", "connection success ");
+                Toast.makeText(getApplicationContext(), "Event Successfully Created", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                //Log.e("log_tag", "Error in http connection " + e.toString());
+                Toast.makeText(getApplicationContext(), "Connection fail", Toast.LENGTH_SHORT).show();
 
-        }
-
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"), 8);
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null)
-            {
-                sb.append(line + "\n");
-                Intent i = new Intent(getBaseContext(),MainActivity.class);
-                startActivity(i);
             }
-            is.close();
-            result=sb.toString();
-        }
-        catch(Exception e)
-        {
-            Log.e("log_tag", "Error " + e.toString());
-        }
 
-        try {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                    Intent i = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(i);
+                }
+                is.close();
+                result = sb.toString();
+            } catch (Exception e) {
+                Log.e("log_tag", "Error " + e.toString());
+            }
 
-            JSONObject json_data = new JSONObject(result);
-            CharSequence w = (CharSequence) json_data.get("re");
-            //Toast.makeText(getApplicationContext(), w, Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(NewEvent.this,MainActivity.class);
+            try {
+
+                JSONObject json_data = new JSONObject(result);
+                CharSequence w = (CharSequence) json_data.get("re");
+                //Toast.makeText(getApplicationContext(), w, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(NewEvent.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            } catch (JSONException e) {
+                Log.e("log_tag", "Error " + e.toString());
+            }
+            Intent i = new Intent(NewEvent.this, MainActivity.class);
             startActivity(i);
             finish();
-        } catch (JSONException e) {
-            Log.e("log_tag", "Error " + e.toString());
         }
-        Intent i = new Intent(NewEvent.this,MainActivity.class);
-        startActivity(i);
-        finish();
     }
     public void onBackPressed()
     {
