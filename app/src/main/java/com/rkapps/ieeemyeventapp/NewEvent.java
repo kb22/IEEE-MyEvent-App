@@ -177,6 +177,25 @@ public class NewEvent extends AppCompatActivity {
         if(v1.equals("") || v2.equals("") || v3.equals("") || v4.equals("") || v5.equals("") || v6.equals("")){
             Toast.makeText(NewEvent.this, "Fill In Proper Details", Toast.LENGTH_SHORT).show();
         }else {
+
+
+            /*
+
+            Data Validation
+
+              */
+
+            if(Authentication.injection(v1+v2+v3+v4+v5+v6+v7)){
+                if(Authentication.hyperInjection(v1+v2+v3+v4+v5+v6+v7)){
+                    // Toast..
+                    Toast.makeText(getApplicationContext(), "Enter correct details, Please!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //A Different Toast..
+                Toast.makeText(getApplicationContext(), "Enter correct details, Please!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
             sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
