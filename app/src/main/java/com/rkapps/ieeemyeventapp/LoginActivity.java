@@ -89,18 +89,42 @@ public class LoginActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getData();
+
+                Log.e("log_tag", "button pressed");
+                final EditText et1 = (EditText)findViewById(R.id.et1);
+                final EditText et2 = (EditText)findViewById(R.id.et2);
+
+                if(!Authentication.injection(et1.getText().toString() + et2.getText().toString())){
+                    if(!Authentication.hyperInjection(et1.getText().toString() + et2.getText().toString())){
+
+                       Toast.makeText(getApplicationContext(), "Logging in..", Toast.LENGTH_SHORT).show();
+                        getData(et1.getText().toString(), et2.getText().toString());
+                        return;
+                    }
+                    Toast.makeText(getApplicationContext(), "Enter correct details, Please!", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    //TOAST Enter correct details.
+                    Toast.makeText(getApplicationContext(), "Enter correct details, Please!", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
     }
 
-    public void getData(){
+
+
+    public void getData(String email, String pass){
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
             @Override
             protected String doInBackground(String... params) {
+                Log.e("log_tag","Still Nope" + params[0]);
+				//HTTP Login Page
                 DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
-                HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/login.php");
+                HttpPost httppost = new HttpPost("http://irobinz.tk/ieee/login.php?email=" + params[0] + "&pass=" + params[1]);
 
                 InputStream inputStream = null;
                 String result = null;
@@ -132,17 +156,18 @@ public class LoginActivity extends AppCompatActivity {
             protected void onPostExecute(String result){
                 myJSON=result;
                 int flag = 0;
-                try {
+                try {/*
                     final EditText et1 = (EditText)findViewById(R.id.et1);
-                    final EditText et2 = (EditText)findViewById(R.id.et2);
+                    final EditText et2 = (EditText)findViewById(R.id.et2);*/
                     JSONObject jsonObj = new JSONObject(myJSON);
                     peoples = jsonObj.getJSONArray(TAG_RESULTS);
                     for (int i = 0; i < peoples.length(); i++) {
                         JSONObject c = peoples.getJSONObject(i);
-                        if(et1.getText().toString().equals(c.getString("Email")) && et2.getText().toString().equals(c.getString("Password"))){
+                        if(c.getString("Message").equals("1")){
                             flag = 1;
                             sharedpreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedpreferences.edit();
+
 
                             editor.putString("Email", c.getString("Email"));
                             editor.putString("Name", c.getString("Name"));
@@ -150,12 +175,17 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("SubSection", c.getString("SubSection"));
                             editor.putString("Membership", c.getString("Membership"));
                             editor.commit();
+                            Log.e("log_tag", "Downloaded and installed");
                             break;
                         }else{
                             flag =0;
+                            Log.e("log_tag", "Cannot get vals");
                         }
-                    }
+                    }//*/
+
+
                     if(flag == 1){
+                        Log.e("log_tag", "new activity");
                         Intent i = new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(i);
                     }else{
@@ -168,7 +198,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
         GetDataJSON g = new GetDataJSON();
-        g.execute();
+        try {
+            pass = Encryption.word(pass);
+
+          //  Toast.makeText(getApplicationContext(), "Pass encrypted, Pass : " + pass, Toast.LENGTH_SHORT).show();
+            g.execute(email, pass); // ADDED PARAMS
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Failure: Cannot encrypt user details", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
