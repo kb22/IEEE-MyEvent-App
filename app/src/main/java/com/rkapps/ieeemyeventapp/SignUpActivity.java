@@ -163,6 +163,26 @@ public class SignUpActivity extends AppCompatActivity {
                 Spinner spinner2 = (Spinner) findViewById(R.id.spinner2);
                 String v8 = spinner2.getSelectedItem().toString();
 
+
+            /*
+
+            Data Validation
+
+              */
+
+                if(Authentication.injection(v1+v2+v3+v4+v5+v6+v7+v8)){
+                    if(Authentication.hyperInjection(v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8)){
+                        //Toast..
+                        Toast.makeText(getApplicationContext(), "Enter correct details, Please!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Toast.makeText(getApplicationContext(), "Enter correct details, Please!", Toast.LENGTH_SHORT).show();
+                    //Toast..
+                    return;
+                }
+
+
+
                 if(v4.equals(v5)){
                     if(v1.equals("") || v2.equals("") || v3.equals("") || v4.equals("") || v5.equals("") || v6.equals("") || v7.equals("") || v8.equals("")){
                         Toast.makeText(SignUpActivity.this, "Fill In Proper Details", Toast.LENGTH_SHORT).show();
@@ -176,7 +196,12 @@ public class SignUpActivity extends AppCompatActivity {
                         editor.putString("SubSection", v8);
                         editor.putString("Membership", v6);
                         editor.commit();
-                        new createEvent().execute(v1, v2, v3, v4, v6, v7, v8);
+                        try {
+                            v4 = Encryption.word(v4);
+                            new createEvent().execute(v1, v2, v3, v4, v6, v7, v8);
+                        }catch(Exception e){
+                            Toast.makeText(SignUpActivity.this, "Failure: Cannot encrypt user details", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }else{
                     Toast.makeText(SignUpActivity.this, "Passwords Do Not Match", Toast.LENGTH_SHORT).show();
