@@ -13,7 +13,7 @@ The Android application aims to create a unified platform where any IEEE Member 
 
 ## Running the Backend server (Local)
 
-1. Setup a PHP Server (Check ![XAMPP](https://www.apachefriends.org/download.html))
+1. Setup a PHP Server (Check [XAMPP](https://www.apachefriends.org/download.html))
 2. Create a folder by the name `MyEventApp` inside the server directory (For XAMPP, inside `htdocs`)
 3. Place all the PHP files from this project inside this folder
 4. Start the server
